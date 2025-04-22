@@ -20,24 +20,3 @@ jobs:
 
       - name: Run build
         run: npm run build
-name: Run Frontend Tests
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Run build
-        run: npm run build
