@@ -1,12 +1,16 @@
+import {
+  AUTH_TOKEN_COOKIE,
+  clearAuthCookie,
+  setAuthCookie,
+} from "@/lib/auth/session";
 import { ApiError, NetworkError } from "./errors";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-const TOKEN_KEY = "auth_token";
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
   try {
-    return localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(AUTH_TOKEN_COOKIE);
   } catch {
     return null;
   }
@@ -15,7 +19,8 @@ function getToken(): string | null {
 function setToken(token: string): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(AUTH_TOKEN_COOKIE, token);
+    setAuthCookie(token);
   } catch {
     console.error("Failed to store token");
   }
@@ -24,7 +29,8 @@ function setToken(token: string): void {
 function clearToken(): void {
   if (typeof window === "undefined") return;
   try {
-    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(AUTH_TOKEN_COOKIE);
+    clearAuthCookie();
   } catch {
     console.error("Failed to clear token");
   }

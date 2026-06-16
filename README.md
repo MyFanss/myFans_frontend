@@ -1,5 +1,46 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Auth flow & protected routes
+
+Authentication uses a **dual-storage strategy**:
+
+- **`localStorage`** (`auth_token`) — used by the browser API client to attach `Authorization: Bearer <token>` headers.
+- **`auth_token` cookie** — mirrored on login/logout so Next.js middleware can read the session on the edge without `localStorage` (which is unavailable in middleware).
+
+After a successful login, `api.setToken()` writes to both stores. `api.clearToken()` removes both.
+
+### Protected routes
+
+`src/middleware.ts` guards routes under `/dashboard/*` and `/profile/*`. Unauthenticated visitors are redirected to:
+
+```
+/login?redirect=/original-path
+```
+
+The login page reads `redirect` and sends the user to that path after sign-in (default: `/dashboard`).
+
+### Public routes
+
+These paths are reachable without a token:
+
+- `/`
+- `/login`
+- `/signup`
+
+Authenticated users who visit `/login` or `/signup` are redirected to `/dashboard`.
+
+### Session helpers
+
+`src/lib/auth/session.ts` exports:
+
+- `getTokenFromRequest(request)` / `isAuthenticatedFromRequest(request)` — for middleware
+- `setAuthCookie()` / `clearAuthCookie()` — client-side cookie sync
+
+`src/lib/auth/session.server.ts` exports:
+
+- `getToken()` — async, for Server Components (`cookies()`)
+- `isAuthenticated()`
+
 ## Getting Started
 
 First, run the development server:
