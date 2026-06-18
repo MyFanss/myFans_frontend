@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useCreators } from "@/hooks/queries/useCreators";
 import { useSubscribe, useUnsubscribe } from "@/hooks/queries/useSubscriptions";
 import { Input } from "@/components/ui/input";
@@ -73,9 +74,11 @@ export default function DiscoverPage() {
             >
               <div className="flex items-center gap-3">
                 {creator.avatarUrl ? (
-                  <img
+                  <Image
                     src={creator.avatarUrl}
                     alt={creator.name}
+                    width={40}
+                    height={40}
                     className="h-10 w-10 rounded-full object-cover"
                   />
                 ) : (
