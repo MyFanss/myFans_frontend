@@ -28,6 +28,7 @@ export function LoginForm() {
         password,
       });
       api.setToken(response.access_token);
+      api.setCurrentUser(response.user);
       router.replace(redirectTo);
     } catch {
       setError("Login failed. Check your credentials and try again.");

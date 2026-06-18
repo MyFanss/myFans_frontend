@@ -1,10 +1,15 @@
+export type UserRole = "creator" | "fan";
+
+export interface User {
+  id: string;
+  email: string;
+  role: UserRole;
+}
+
 export interface AuthResponse {
   access_token: string;
   refresh_token?: string;
-  user: {
-    id: string;
-    email: string;
-  };
+  user: User;
 }
 
 export interface ApiResponse<T = unknown> {
@@ -13,30 +18,14 @@ export interface ApiResponse<T = unknown> {
   statusCode?: number;
 }
 
-export interface User {
+export type PostVisibility = "public" | "subscribers";
+
+export interface Post {
   id: string;
-  email: string;
-  name: string;
-  handle: string;
-  avatarUrl?: string;
-  bio?: string;
+  title: string;
+  body: string;
+  visibility: PostVisibility;
+  mediaUrl?: string;
+  authorId: string;
   createdAt: string;
-}
-
-export interface Creator {
-  id: string;
-  handle: string;
-  name: string;
-  avatarUrl?: string;
-  bio?: string;
-  subscriberCount: number;
-  isSubscribed?: boolean;
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  creator: Creator;
-  subscribedAt: string;
-  expiresAt?: string;
 }
