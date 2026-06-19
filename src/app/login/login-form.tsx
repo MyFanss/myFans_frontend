@@ -37,6 +37,7 @@ export function LoginForm() {
     try {
       const response = await api.post<AuthResponse>("/auth/login", values);
       api.setToken(response.access_token);
+      api.setCurrentUser(response.user);
       router.replace(redirectTo);
     } catch {
       setServerError("Login failed. Check your credentials and try again.");

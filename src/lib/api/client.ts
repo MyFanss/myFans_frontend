@@ -4,8 +4,10 @@ import {
   setAuthCookie,
 } from "@/lib/auth/session";
 import { ApiError, NetworkError } from "./errors";
+import type { User } from "@/types/api";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const CURRENT_USER_STORAGE_KEY = "auth_user";
 
 function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -33,6 +35,34 @@ function clearToken(): void {
     clearAuthCookie();
   } catch {
     console.error("Failed to clear token");
+  }
+}
+
+function getCurrentUser(): User | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
+    return raw ? (JSON.parse(raw) as User) : null;
+  } catch {
+    return null;
+  }
+}
+
+function setCurrentUser(user: User): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
+  } catch {
+    console.error("Failed to store current user");
+  }
+}
+
+function clearCurrentUser(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
+  } catch {
+    console.error("Failed to clear current user");
   }
 }
 
@@ -119,4 +149,7 @@ export const api = {
   setToken,
   clearToken,
   getToken,
+  getCurrentUser,
+  setCurrentUser,
+  clearCurrentUser,
 };
