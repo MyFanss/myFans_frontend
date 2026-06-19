@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { isAuthenticatedFromRequest } from "@/lib/auth/session";
 
 const AUTH_ROUTES = ["/login", "/signup"];
-const PROTECTED_PREFIXES = ["/dashboard", "/profile"];
+const PROTECTED_PREFIXES = ["/dashboard", "/profile", "/discover", "/subscriptions"];
 
 function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
@@ -34,5 +34,7 @@ export const config = {
     "/signup",
     "/dashboard/:path*",
     "/profile/:path*",
+    "/discover/:path*",
+    "/subscriptions/:path*",
   ],
 };
