@@ -29,3 +29,14 @@ export interface Post {
   authorId: string;
   createdAt: string;
 }
+
+export interface Creator {
+  id: string;
+  name: string;
+  username: string;
+  avatar?: string;
+  bio?: string;
+  subscriberCount?: number;
+  isSubscribed?: boolean;
+  subscriptionPrice?: number;
+}
