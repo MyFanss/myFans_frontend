@@ -12,3 +12,14 @@ export interface ApiResponse<T = unknown> {
   message?: string;
   statusCode?: number;
 }
+
+export interface Creator {
+  id: string;
+  name: string;
+  username: string;
+  avatar?: string;
+  bio?: string;
+  followers?: number;
+  isVerified?: boolean;
+  category?: string;
+}
