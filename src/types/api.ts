@@ -29,3 +29,37 @@ export interface Post {
   authorId: string;
   createdAt: string;
 }
+
+export interface CreatorPostPreview {
+  id: string;
+  title: string;
+  excerpt: string;
+  publishedAt: string;
+}
+
+export interface Creator {
+  id: string;
+  userId?: string;
+  handle: string;
+  name: string;
+  displayName: string;
+  bio?: string;
+  category?: string;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
+  subscriberCount: number;
+  isSubscribed?: boolean;
+}
+
+export interface CreatorProfile extends Creator {
+  bio: string;
+  category: string;
+  recentPosts?: CreatorPostPreview[];
+}
+
+export interface Subscription {
+  id: string;
+  creatorId: string;
+  userId?: string;
+  createdAt?: string;
+}
