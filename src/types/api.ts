@@ -1,5 +1,33 @@
 export type UserRole = "creator" | "fan";
 
+export type CreatorCategory =
+  | "All"
+  | "Music"
+  | "Art"
+  | "Gaming"
+  | "Fashion"
+  | "Fitness"
+  | "Tech"
+  | "Food"
+  | "Travel";
+
+export interface Creator {
+  id: string;
+  name: string;
+  handle: string;
+  bio?: string;
+  avatarUrl?: string;
+  subscriberCount: number;
+  isSubscribed: boolean;
+  category: CreatorCategory;
+}
+
+export interface Subscription {
+  id: string;
+  creatorId: string;
+  createdAt: string;
+}
+
 export interface User {
   id: string;
   email: string;
