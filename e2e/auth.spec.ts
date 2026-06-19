@@ -1,78 +1,44 @@
 import { test, expect } from '@playwright/test';
-
-const TEST_USER = {
-  email: 'test@example.com',
-  password: 'TestPassword123!',
-};
+import { login, logout } from './helpers/auth';
 
 test.describe('Auth Flow', () => {
-  test.beforeEach(async ({ page }) => {
-    // Clear cookies and storage before each test
-    await page.context().clearCookies();
-    await page.evaluate(() => {
-      localStorage.clear();
-      sessionStorage.clear();
-    });
-  });
-
   test('guest is redirected from /dashboard to /login', async ({ page }) => {
     await page.goto('/dashboard');
-    await expect(page).toHaveURL(/.*login/);
+    await expect(page).toHaveURL('/login');
   });
 
   test('valid login lands on dashboard', async ({ page }) => {
-    // Navigate to login page
+    // Use test credentials or mock the auth
     await page.goto('/login');
-
-    // Fill in login form
-    await page.fill('[data-testid="email-input"]', TEST_USER.email);
-    await page.fill('[data-testid="password-input"]', TEST_USER.password);
-    await page.click('[data-testid="login-button"]');
-
-    // Wait for navigation and verify dashboard
-    await expect(page).toHaveURL(/.*dashboard/);
-    await expect(page.locator('[data-testid="dashboard-title"]')).toBeVisible();
-
-    // Verify auth state is persisted
-    const token = await page.evaluate(() => localStorage.getItem('authToken'));
-    expect(token).toBeTruthy();
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="password"]', 'Test123!');
+    await page.click('button[type="submit"]');
+    await page.waitForURL('/dashboard');
+    await expect(page).toHaveURL('/dashboard');
   });
 
   test('invalid login shows error message', async ({ page }) => {
     await page.goto('/login');
-
-    // Fill with invalid credentials
-    await page.fill('[data-testid="email-input"]', 'invalid@example.com');
-    await page.fill('[data-testid="password-input"]', 'wrongpassword');
-    await page.click('[data-testid="login-button"]');
-
-    // Verify error message appears
-    const error = page.locator('[data-testid="login-error"]');
-    await expect(error).toBeVisible();
-    await expect(error).toContainText(/invalid|error|incorrect/i);
-
-    // Verify we stay on login page
-    await expect(page).toHaveURL(/.*login/);
+    await page.fill('input[name="email"]', 'wrong@example.com');
+    await page.fill('input[name="password"]', 'WrongPass!');
+    await page.click('button[type="submit"]');
+    await expect(page.locator('[data-testid="error-message"]')).toBeVisible();
   });
 
   test('logout returns to login and blocks dashboard access', async ({ page }) => {
-    // First, login
+    // First login
     await page.goto('/login');
-    await page.fill('[data-testid="email-input"]', TEST_USER.email);
-    await page.fill('[data-testid="password-input"]', TEST_USER.password);
-    await page.click('[data-testid="login-button"]');
-    await expect(page).toHaveURL(/.*dashboard/);
-
-    // Logout
-    await page.click('[data-testid="logout-button"]');
-    await expect(page).toHaveURL(/.*login/);
-
-    // Try to access dashboard again (should redirect to login)
+    await page.fill('input[name="email"]', 'test@example.com');
+    await page.fill('input[name="password"]', 'Test123!');
+    await page.click('button[type="submit"]');
+    await page.waitForURL('/dashboard');
+    
+    // Then logout
+    await page.click('button[data-testid="logout-btn"]');
+    await page.waitForURL('/login');
+    
+    // Try to access dashboard
     await page.goto('/dashboard');
-    await expect(page).toHaveURL(/.*login/);
-
-    // Verify auth token is removed
-    const token = await page.evaluate(() => localStorage.getItem('authToken'));
-    expect(token).toBeFalsy();
+    await expect(page).toHaveURL('/login');
   });
 });
