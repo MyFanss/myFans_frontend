@@ -18,6 +18,27 @@ export interface ApiResponse<T = unknown> {
   statusCode?: number;
 }
 
+export interface Creator {
+  id: string;
+  handle: string;
+  name: string;
+  bio?: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
+  category?: string;
+  subscriberCount: number;
+  isSubscribed?: boolean;
+}
+
+export interface Subscription {
+  id: string;
+  creatorId: string;
+  fanId: string;
+  status: "active" | "cancelled";
+  subscribedAt: string;
+  cancelledAt?: string;
+}
+
 export type PostVisibility = "public" | "subscribers";
 
 export interface Post {
