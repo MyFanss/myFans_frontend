@@ -3,31 +3,19 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useCreators } from "@/hooks/queries/useCreators";
-import { useSubscribe, useUnsubscribe } from "@/hooks/queries/useSubscriptions";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import type { Creator } from "@/types/api";
+import { SubscribeButton } from "@/components/subscriptions/SubscribeButton";
 
 export default function DiscoverPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { data: creators, isLoading, isError, error } = useCreators({ search: debouncedSearch });
-  const subscribe = useSubscribe();
-  const unsubscribe = useUnsubscribe();
 
   function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
     const timer = setTimeout(() => setDebouncedSearch(e.target.value), 400);
     return () => clearTimeout(timer);
-  }
-
-  function handleSubscribeToggle(creator: Creator) {
-    if (creator.isSubscribed) {
-      unsubscribe.mutate(creator.id);
-    } else {
-      subscribe.mutate(creator.id);
-    }
   }
 
   return (
@@ -104,14 +92,10 @@ export default function DiscoverPage() {
                 <span className="text-xs text-muted-foreground">
                   {creator.subscriberCount.toLocaleString()} subscribers
                 </span>
-                <Button
-                  size="sm"
-                  variant={creator.isSubscribed ? "outline" : "default"}
-                  onClick={() => handleSubscribeToggle(creator)}
-                  disabled={subscribe.isPending || unsubscribe.isPending}
-                >
-                  {creator.isSubscribed ? "Unsubscribe" : "Subscribe"}
-                </Button>
+                <SubscribeButton
+                  creatorId={creator.id}
+                  isSubscribed={creator.isSubscribed}
+                />
               </div>
             </div>
           ))}
