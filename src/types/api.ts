@@ -48,6 +48,14 @@ export interface ApiResponse<T = unknown> {
 
 export interface Creator {
   id: string;
+fix/issue-27-playwright-e2e-auth
+  name: string;
+  username: string;
+  avatar?: string;
+  bio?: string;
+  followers?: number;
+  isVerified?: boolean;
+  category?: string;
   handle: string;
   name: string;
   bio?: string;
@@ -77,4 +85,5 @@ export interface Post {
   mediaUrl?: string;
   authorId: string;
   createdAt: string;
+ main
 }
