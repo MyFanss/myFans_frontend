@@ -11,23 +11,6 @@ export type CreatorCategory =
   | "Food"
   | "Travel";
 
-export interface Creator {
-  id: string;
-  name: string;
-  handle: string;
-  bio?: string;
-  avatarUrl?: string;
-  subscriberCount: number;
-  isSubscribed: boolean;
-  category: CreatorCategory;
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  createdAt: string;
-}
-
 export interface User {
   id: string;
   email: string;
@@ -48,31 +31,47 @@ export interface ApiResponse<T = unknown> {
 
 export interface Creator {
   id: string;
-fix/issue-27-playwright-e2e-auth
   name: string;
-  username: string;
-  avatar?: string;
-  bio?: string;
-  followers?: number;
-  isVerified?: boolean;
-  category?: string;
   handle: string;
-  name: string;
   bio?: string;
   avatarUrl?: string;
-  bannerUrl?: string;
-  category?: string;
+  subscriberCount: number;
+  isSubscribed: boolean;
+  category: CreatorCategory;
+}
+
+export interface CreatorPostPreview {
+  id: string;
+  title: string;
+  excerpt: string;
+  publishedAt: string;
+}
+
+export interface CreatorProfile {
+  id: string;
+  userId?: string;
+  handle: string;
+  name: string;
+  displayName: string;
+  bio: string;
+  category: string;
+  avatarUrl?: string | null;
+  bannerUrl?: string | null;
   subscriberCount: number;
   isSubscribed?: boolean;
+  recentPosts?: CreatorPostPreview[];
 }
 
 export interface Subscription {
   id: string;
   creatorId: string;
-  fanId: string;
-  status: "active" | "cancelled";
-  subscribedAt: string;
+  fanId?: string;
+  userId?: string;
+  status?: "active" | "cancelled" | "expired";
+  createdAt?: string;
+  subscribedAt?: string;
   cancelledAt?: string;
+  expiresAt?: string;
 }
 
 export type PostVisibility = "public" | "subscribers";
@@ -85,58 +84,4 @@ export interface Post {
   mediaUrl?: string;
   authorId: string;
   createdAt: string;
- main
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  status: "active" | "cancelled" | "expired";
-  createdAt: string;
-  expiresAt?: string;
-}
-
-export interface Creator {
-  id: string;
-  name: string;
-  handle: string;
-  avatarUrl?: string;
-  bio?: string;
-  subscriberCount: number;
-  isSubscribed?: boolean;
-  subscriptionPrice?: number;
-}
-
-export interface CreatorPostPreview {
-  id: string;
-  title: string;
-  excerpt: string;
-  publishedAt: string;
-}
-
-export interface Creator {
-  id: string;
-  userId?: string;
-  handle: string;
-  name: string;
-  displayName: string;
-  bio?: string;
-  category?: string;
-  avatarUrl?: string | null;
-  bannerUrl?: string | null;
-  subscriberCount: number;
-  isSubscribed?: boolean;
-}
-
-export interface CreatorProfile extends Creator {
-  bio: string;
-  category: string;
-  recentPosts?: CreatorPostPreview[];
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  userId?: string;
-  createdAt?: string;
 }
