@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/api/client";
+import { signup, extractApiErrorMessage } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { signupSchema, type SignupFormValues } from "@/lib/validations/auth";
-import type { AuthResponse } from "@/types/api";
 
 export function SignupForm() {
   const router = useRouter();
@@ -30,14 +30,14 @@ export function SignupForm() {
   async function onSubmit(values: SignupFormValues) {
     setServerError(null);
     try {
-      const response = await api.post<AuthResponse>("/auth/signup", {
-        email: values.email,
-        password: values.password,
-      });
-      api.setToken(response.access_token);
+      await signup({ email: values.email, password: values.password });
       router.replace("/dashboard");
-    } catch {
-      setServerError("Sign up failed. This email may already be in use.");
+    } catch (error) {
+      if (error instanceof ApiError && error.statusCode === 409) {
+        setServerError("An account with this email already exists.");
+      } else {
+        setServerError(extractApiErrorMessage(error));
+      }
     }
   }
 
@@ -48,7 +48,6 @@ export function SignupForm() {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
             <FormField
               control={form.control}
               name="email"
@@ -86,14 +85,15 @@ export function SignupForm() {
                   <FormControl>
                     <Input type="password" placeholder="••••••••" {...field} />
                   </FormControl>
-                  {/* This message comes from the .refine() cross-field check */}
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             {serverError ? (
-              <p className="text-sm text-destructive">{serverError}</p>
+              <p role="alert" className="text-sm text-destructive">
+                {serverError}
+              </p>
             ) : null}
 
             <Button

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/lib/api/client";
+import { login, extractApiErrorMessage } from "@/lib/api/auth";
+import { ApiError } from "@/lib/api/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +17,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
-import type { AuthResponse } from "@/types/api";
 
 export function LoginForm() {
   const router = useRouter();
@@ -24,23 +24,22 @@ export function LoginForm() {
   const redirectTo = searchParams.get("redirect") || "/dashboard";
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // useForm wires up RHF with our Zod schema as the validator.
-  // zodResolver translates Zod errors into the format RHF expects.
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
 
-  // This function only runs when ALL fields pass Zod validation.
   async function onSubmit(values: LoginFormValues) {
     setServerError(null);
     try {
-      const response = await api.post<AuthResponse>("/auth/login", values);
-      api.setToken(response.access_token);
-      api.setCurrentUser(response.user);
+      await login(values);
       router.replace(redirectTo);
-    } catch {
-      setServerError("Login failed. Check your credentials and try again.");
+    } catch (error) {
+      if (error instanceof ApiError && error.statusCode === 401) {
+        setServerError("Invalid email or password.");
+      } else {
+        setServerError(extractApiErrorMessage(error));
+      }
     }
   }
 
@@ -49,21 +48,17 @@ export function LoginForm() {
       <div className="w-full max-w-md space-y-4 rounded-lg border p-6">
         <h1 className="text-2xl font-semibold">Log in</h1>
 
-        {/* Form spreads the RHF context so all FormField children can access it */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-
             <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
-                  {/* FormControl merges id + aria-invalid onto the Input */}
                   <FormControl>
                     <Input type="email" placeholder="you@example.com" {...field} />
                   </FormControl>
-                  {/* Renders the Zod error message, or nothing when valid */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -84,7 +79,9 @@ export function LoginForm() {
             />
 
             {serverError ? (
-              <p className="text-sm text-destructive">{serverError}</p>
+              <p role="alert" className="text-sm text-destructive">
+                {serverError}
+              </p>
             ) : null}
 
             <Button
