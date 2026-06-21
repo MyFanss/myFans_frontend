@@ -10,9 +10,9 @@ export const profileSchema = z.object({
     .max(300, "Bio must be 300 characters or fewer")
     .optional()
     .or(z.literal("")),
-  website: z
+  avatarUrl: z
     .string()
-    .url("Enter a valid URL (e.g. https://example.com)")
+    .url("Enter a valid URL (e.g. https://example.com/avatar.jpg)")
     .optional()
     .or(z.literal("")),
 });
