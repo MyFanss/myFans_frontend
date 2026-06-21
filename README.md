@@ -61,6 +61,37 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## CI checks
+
+[![Frontend CI](https://github.com/GrantFoxTech/myFans_frontend/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/GrantFoxTech/myFans_frontend/actions/workflows/frontend-ci.yml)
+
+Every pull request runs these checks in order — all must pass before merging:
+
+| Step | Command | What it catches |
+|------|---------|-----------------|
+| Lint | `npm run lint` | ESLint rule violations |
+| Type check | `npm run typecheck` | TypeScript type errors |
+| Unit tests | `npm run test` | Logic regressions |
+| Build | `npm run build` | Compile-time errors, bad imports |
+
+### Fixing failures locally
+
+```bash
+# Lint errors
+npm run lint
+# Auto-fixable issues
+npx next lint --fix
+
+# Type errors
+npm run typecheck
+
+# Test failures
+npm run test
+
+# Build errors
+npm run build
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
