@@ -6,6 +6,9 @@ import type { LoginFormValues, SignupFormValues } from "@/lib/validations/auth";
 export async function login(credentials: LoginFormValues): Promise<AuthResponse> {
   const response = await api.post<AuthResponse>("/auth/login", credentials);
   api.setToken(response.access_token);
+  if (response.refresh_token) {
+    api.setRefreshToken(response.refresh_token);
+  }
   api.setCurrentUser(response.user);
   return response;
 }
@@ -15,12 +18,15 @@ export async function signup(
 ): Promise<AuthResponse> {
   const response = await api.post<AuthResponse>("/auth/signup", values);
   api.setToken(response.access_token);
+  if (response.refresh_token) {
+    api.setRefreshToken(response.refresh_token);
+  }
   api.setCurrentUser(response.user);
   return response;
 }
 
 export function logout(): void {
-  api.clearToken();
+  api.clearAllTokens();
   api.clearCurrentUser();
 }
 

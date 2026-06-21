@@ -1,42 +1,15 @@
 import {
-  AUTH_TOKEN_COOKIE,
-  clearAuthCookie,
-  setAuthCookie,
-} from "@/lib/auth/session";
+  getAccessToken,
+  setAccessToken,
+  clearAccessToken,
+  setRefreshToken,
+  clearAllTokens,
+} from "@/lib/auth/token-store";
+import { refreshAccessToken } from "@/lib/auth/refresh";
 import { ApiError, NetworkError } from "./errors";
 import type { User } from "@/types/api";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 const CURRENT_USER_STORAGE_KEY = "auth_user";
-
-function getToken(): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    return localStorage.getItem(AUTH_TOKEN_COOKIE);
-  } catch {
-    return null;
-  }
-}
-
-function setToken(token: string): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.setItem(AUTH_TOKEN_COOKIE, token);
-    setAuthCookie(token);
-  } catch {
-    console.error("Failed to store token");
-  }
-}
-
-function clearToken(): void {
-  if (typeof window === "undefined") return;
-  try {
-    localStorage.removeItem(AUTH_TOKEN_COOKIE);
-    clearAuthCookie();
-  } catch {
-    console.error("Failed to clear token");
-  }
-}
 
 function getCurrentUser(): User | null {
   if (typeof window === "undefined") return null;
@@ -53,7 +26,9 @@ function setCurrentUser(user: User): void {
   try {
     localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
   } catch {
-    console.error("Failed to store current user");
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Failed to store current user");
+    }
   }
 }
 
@@ -62,19 +37,25 @@ function clearCurrentUser(): void {
   try {
     localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
   } catch {
-    console.error("Failed to clear current user");
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Failed to clear current user");
+    }
   }
 }
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string | number | boolean>;
+  /** Internal flag — prevents infinite retry loops on token refresh. */
+  _retry?: boolean;
 }
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 async function request<T = unknown>(
   endpoint: string,
   options: RequestOptions = {}
 ): Promise<T> {
-  const { params, ...fetchOptions } = options;
+  const { params, _retry, ...fetchOptions } = options;
   const url = new URL(endpoint, API_URL);
 
   if (params) {
@@ -86,7 +67,7 @@ async function request<T = unknown>(
   const headers = new Headers(fetchOptions.headers || {});
   headers.set("Content-Type", "application/json");
 
-  const token = getToken();
+  const token = getAccessToken();
   if (token) {
     headers.set("Authorization", `Bearer ${token}`);
   }
@@ -100,6 +81,16 @@ async function request<T = unknown>(
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
+      // Silently refresh on expired access token, then retry once.
+      if (
+        response.status === 401 &&
+        !_retry &&
+        (data as Record<string, unknown> | null)?.code === "ACCESS_TOKEN_EXPIRED"
+      ) {
+        await refreshAccessToken();
+        return request<T>(endpoint, { ...options, _retry: true });
+      }
+
       throw new ApiError(
         response.status,
         data,
@@ -146,9 +137,11 @@ export const api = {
   delete: <T = unknown>(endpoint: string, options?: RequestOptions) =>
     request<T>(endpoint, { ...options, method: "DELETE" }),
 
-  setToken,
-  clearToken,
-  getToken,
+  getToken: getAccessToken,
+  setToken: setAccessToken,
+  clearToken: clearAccessToken,
+  setRefreshToken,
+  clearAllTokens,
   getCurrentUser,
   setCurrentUser,
   clearCurrentUser,
