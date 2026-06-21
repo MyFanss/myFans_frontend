@@ -2,6 +2,7 @@
 
 import { Bell, Menu, UserCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import ThemeToggle from "@/components/theme/ThemeToggle"
 
 interface TopNavProps {
   onOpenSidebar: () => void
@@ -37,6 +38,7 @@ export default function TopNav({ onOpenSidebar }: TopNavProps) {
           <Button variant="outline" size="sm">
             New
           </Button>
+          <ThemeToggle />
           <Button variant="ghost" size="icon" aria-label="Notifications">
             <Bell className="h-5 w-5" />
           </Button>
