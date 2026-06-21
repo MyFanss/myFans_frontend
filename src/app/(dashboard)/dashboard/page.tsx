@@ -1,67 +1,39 @@
-import { Button } from "@/components/ui/button"
-import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { PageSkeleton } from "@/components/ui/page-skeleton"
-import { ErrorState } from "@/components/ui/error-state"
-import { EmptyState } from "@/components/ui/empty-state"
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import StatCard from "@/components/dashboard/StatCard";
+import { mockDashboardData } from "@/lib/mocks/dashboard";
 
-/**
- * Demo: append ?ui=loading | ?ui=error | ?ui=empty to the URL to preview each state.
- * Remove the query param (or use ?ui=content) for the normal dashboard view.
- */
-
-interface DashboardPageProps {
-  searchParams: Promise<{ ui?: string }>
-}
-
-export default async function DashboardPage({ searchParams }: DashboardPageProps) {
-  const { ui } = await searchParams
-
-  if (ui === "loading") {
-    return (
-      <main className="min-h-screen">
-        <PageSkeleton statCards={4} contentRows={5} />
-      </main>
-    )
-  }
-
-  if (ui === "loading-page") {
-    return (
-      <main className="min-h-screen">
-        <LoadingSpinner variant="page" size="lg" label="Loading dashboard…" />
-      </main>
-    )
-  }
-
-  if (ui === "error") {
-    return (
-      <main className="min-h-screen flex items-center justify-center p-8">
-        <ErrorState
-          title="Failed to load dashboard"
-          message="We couldn't fetch your stats. Check your connection and try again."
-          /* onRetry is a client callback — wire it up in a client wrapper when needed */
-        />
-      </main>
-    )
-  }
-
-  if (ui === "empty") {
-    return (
-      <main className="min-h-screen flex items-center justify-center p-8">
-        <EmptyState
-          title="No posts yet"
-          description="Start sharing content with your subscribers and grow your audience."
-          action={
-            <Button size="sm">Create your first post</Button>
-          }
-        />
-      </main>
-    )
-  }
+export default function DashboardPage() {
+  const { creatorName, profileComplete, stats } = mockDashboardData;
 
   return (
-    <main className="min-h-screen flex items-center justify-center p-8 gap-3">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
-      <LoadingSpinner variant="inline" size="sm" />
-    </main>
-  )
+    <div className="space-y-8">
+      <DashboardHeader creatorName={creatorName} />
+
+      {profileComplete ? (
+        <section aria-labelledby="dashboard-stats-heading">
+          <h2 id="dashboard-stats-heading" className="sr-only">
+            Creator statistics
+          </h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {stats.map((stat) => (
+              <StatCard key={stat.label} stat={stat} />
+            ))}
+          </div>
+        </section>
+      ) : (
+        <section
+          aria-labelledby="dashboard-empty-heading"
+          className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/40 px-6 py-16 text-center"
+        >
+          <h2 id="dashboard-empty-heading" className="text-lg font-semibold">
+            Complete your profile to get started
+          </h2>
+          <p className="mt-2 max-w-md text-sm text-muted-foreground">
+            Add your bio, profile photo, and payout details to unlock your
+            creator dashboard stats.
+          </p>
+        </section>
+      )}
+    </div>
+  );
 }
