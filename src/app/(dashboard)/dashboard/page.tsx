@@ -1,6 +1,10 @@
+import Link from "next/link";
+import { UserCheck } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import StatCard from "@/components/dashboard/StatCard";
 import { mockDashboardData } from "@/lib/mocks/dashboard";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const { creatorName, profileComplete, stats } = mockDashboardData;
@@ -21,18 +25,16 @@ export default function DashboardPage() {
           </div>
         </section>
       ) : (
-        <section
-          aria-labelledby="dashboard-empty-heading"
-          className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/40 px-6 py-16 text-center"
-        >
-          <h2 id="dashboard-empty-heading" className="text-lg font-semibold">
-            Complete your profile to get started
-          </h2>
-          <p className="mt-2 max-w-md text-sm text-muted-foreground">
-            Add your bio, profile photo, and payout details to unlock your
-            creator dashboard stats.
-          </p>
-        </section>
+        <EmptyState
+          icon={UserCheck}
+          title="Complete your profile to get started"
+          description="Add your bio, profile photo, and payout details to unlock your creator dashboard stats."
+          action={
+            <Button asChild className="min-h-[44px]">
+              <Link href="/settings/profile">Complete Profile</Link>
+            </Button>
+          }
+        />
       )}
     </div>
   );

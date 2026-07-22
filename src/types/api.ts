@@ -33,11 +33,13 @@ export interface Creator {
   id: string;
   name: string;
   handle: string;
+  email?: string;
+  role?: UserRole;
   bio?: string;
   avatarUrl?: string;
   subscriberCount: number;
   isSubscribed: boolean;
-  category: CreatorCategory;
+  category?: CreatorCategory;
 }
 
 export interface CreatorPostPreview {
@@ -72,6 +74,7 @@ export interface Subscription {
   subscribedAt?: string;
   cancelledAt?: string;
   expiresAt?: string;
+  creator?: Creator;
 }
 
 export type PostVisibility = "public" | "subscribers";
@@ -84,21 +87,4 @@ export interface Post {
   mediaUrl?: string;
   authorId: string;
   createdAt: string;
-}
-
-export interface Creator extends User {
-  name: string;
-  handle: string;
-  bio?: string;
-  avatarUrl?: string;
-  subscriberCount: number;
-  isSubscribed: boolean;
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  fanId: string;
-  createdAt: string;
-  creator?: Creator;
 }

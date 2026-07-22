@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api/client";
 import { useCurrentUser } from "@/hooks/queries/useCurrentUser";
-import { useSubscribe } from "@/hooks/queries/useSubscriptions";
+import { useSubscribe } from "@/hooks/useSubscription";
 import { Button } from "@/components/ui/button";
 import type { User } from "@/types/api";
 
