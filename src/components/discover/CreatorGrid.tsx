@@ -1,9 +1,13 @@
+import { SearchX } from "lucide-react";
 import CreatorCard from "./CreatorCard";
 import type { Creator } from "@/types/api";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 
 interface CreatorGridProps {
   creators: Creator[];
   isLoading?: boolean;
+  onResetFilters?: () => void;
 }
 
 function SkeletonCard() {
@@ -25,7 +29,7 @@ function SkeletonCard() {
   );
 }
 
-export default function CreatorGrid({ creators, isLoading }: CreatorGridProps) {
+export default function CreatorGrid({ creators, isLoading, onResetFilters }: CreatorGridProps) {
   if (isLoading) {
     return (
       <div
@@ -42,11 +46,18 @@ export default function CreatorGrid({ creators, isLoading }: CreatorGridProps) {
 
   if (creators.length === 0) {
     return (
-      <div className="flex min-h-[200px] items-center justify-center rounded-xl border border-dashed">
-        <p className="text-sm text-muted-foreground">
-          No creators match your search.
-        </p>
-      </div>
+      <EmptyState
+        icon={SearchX}
+        title="No creators found"
+        description="We couldn't find any creators matching your search or active filters."
+        action={
+          onResetFilters ? (
+            <Button onClick={onResetFilters} variant="outline" className="min-h-[44px]">
+              Clear filters
+            </Button>
+          ) : null
+        }
+      />
     );
   }
 

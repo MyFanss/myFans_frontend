@@ -33,11 +33,13 @@ export interface Creator {
   id: string;
   name: string;
   handle: string;
+  email?: string;
+  role?: UserRole;
   bio?: string;
   avatarUrl?: string;
   subscriberCount: number;
   isSubscribed: boolean;
-  category: CreatorCategory;
+  category?: CreatorCategory;
 }
 
 export interface CreatorPostPreview {
@@ -72,6 +74,7 @@ export interface Subscription {
   subscribedAt?: string;
   cancelledAt?: string;
   expiresAt?: string;
+  creator?: Creator;
 }
 
 export type PostVisibility = "public" | "subscribers";

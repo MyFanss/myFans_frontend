@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { Users } from "lucide-react";
 import { useSubscriptions } from "@/hooks/queries/useSubscriptions";
 import { SubscribeButton } from "@/components/subscriptions/SubscribeButton";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 
 export default function SubscriptionsPage() {
   const { data: subscriptions, isLoading, isError, error } = useSubscriptions();
@@ -31,20 +34,16 @@ export default function SubscriptionsPage() {
       )}
 
       {subscriptions && subscriptions.length === 0 && (
-        <div className="rounded-lg border border-dashed p-8 text-center">
-          <h2 className="text-lg font-medium">No Subscriptions</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            You haven&apos;t subscribed to any creators yet.
-          </p>
-          <div className="mt-6">
-            <Link
-              href="/discover"
-              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-            >
-              Discover Creators
-            </Link>
-          </div>
-        </div>
+        <EmptyState
+          icon={Users}
+          title="No Subscriptions"
+          description="You haven't subscribed to any creators yet."
+          action={
+            <Button asChild className="min-h-[44px]">
+              <Link href="/discover">Discover Creators</Link>
+            </Button>
+          }
+        />
       )}
 
       {subscriptions && subscriptions.length > 0 && (
@@ -91,7 +90,7 @@ export default function SubscriptionsPage() {
                 <div className="mt-auto flex items-center justify-between pt-2">
                   <span className="text-xs text-muted-foreground">
                     Subscribed since{" "}
-                    {new Date(subscription.createdAt).toLocaleDateString()}
+                    {subscription.createdAt ? new Date(subscription.createdAt).toLocaleDateString() : "N/A"}
                   </span>
                   <SubscribeButton
                     creatorId={creator.id}
@@ -104,10 +103,6 @@ export default function SubscriptionsPage() {
           })}
         </div>
       )}
-export default function SubscriptionsPage() {
-  return (
-    <main className="min-h-screen flex items-center justify-center p-8">
-      <h1 className="text-2xl font-semibold">Subscriptions</h1>
     </main>
   );
 }

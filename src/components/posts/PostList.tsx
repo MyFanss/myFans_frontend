@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { FileText, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { listPosts } from "@/lib/api/posts";
 import type { Post } from "@/types/api";
 
@@ -72,7 +74,19 @@ export function PostList() {
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         {!isLoading && !error && posts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No posts yet.</p>
+          <EmptyState
+            icon={FileText}
+            title="No posts yet"
+            description="Share updates, photos, or exclusive content with your subscribers."
+            action={
+              <Button asChild className="min-h-[44px]">
+                <Link href="/dashboard/posts/new">
+                  <Plus className="mr-2 size-4" aria-hidden />
+                  Create new post
+                </Link>
+              </Button>
+            }
+          />
         ) : null}
 
         <ul className="space-y-4">
