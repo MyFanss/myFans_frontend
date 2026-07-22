@@ -102,3 +102,11 @@ export interface Subscription {
   createdAt: string;
   creator?: Creator;
 }
+
+export interface PayoutWallet {
+  id: string;
+  userId: string;
+  address: string;
+  provider: string;
+  connectedAt: string;
+}

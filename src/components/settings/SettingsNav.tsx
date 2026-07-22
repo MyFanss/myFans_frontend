@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const NAV = [
   { href: "/settings/profile", label: "Profile" },
   { href: "/settings/security", label: "Security" },
+  { href: "/settings/payouts", label: "Payouts" },
 ];
 
 export function SettingsNav() {
