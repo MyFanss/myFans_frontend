@@ -1,9 +1,9 @@
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { DashboardStat } from "@/lib/mocks/dashboard";
+import type { AnalyticsStat } from "@/types/analytics";
 
 interface StatCardProps {
-  stat: DashboardStat;
+  stat: AnalyticsStat;
 }
 
 const trendIcons = {
@@ -39,3 +39,17 @@ export default function StatCard({ stat }: StatCardProps) {
     </article>
   );
 }
+
+/**
+ * StatCardSkeleton — shimmer placeholder used while analytics are loading.
+ */
+export function StatCardSkeleton() {
+  return (
+    <div className="rounded-xl border bg-card p-5 space-y-3 animate-pulse">
+      <div className="h-3 w-1/2 rounded-md bg-muted" />
+      <div className="h-7 w-3/4 rounded-md bg-muted" />
+      <div className="h-2.5 w-1/3 rounded-md bg-muted" />
+    </div>
+  );
+}
+

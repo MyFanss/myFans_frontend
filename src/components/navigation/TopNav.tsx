@@ -1,6 +1,7 @@
 "use client"
 
-import { Bell, Menu, UserCircle } from "lucide-react"
+import { useRef } from "react"
+import { Bell, Menu, Search, UserCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ThemeToggle from "@/components/theme/ThemeToggle"
 import LocaleSwitcher from "@/components/i18n/LocaleSwitcher"
@@ -39,6 +40,31 @@ export default function TopNav({ onOpenSidebar }: TopNavProps) {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Search / Command Palette trigger */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="hidden md:inline-flex items-center gap-2 text-muted-foreground"
+            onClick={handleSearchClick}
+            aria-label="Open search (Cmd+K)"
+          >
+            <Search className="h-4 w-4" />
+            <span>Search...</span>
+            <kbd className="ml-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] text-muted-foreground">
+              ⌘K
+            </kbd>
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={handleSearchClick}
+            aria-label="Open search"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+
           <Button variant="outline" size="sm">
             {t("topnav.new")}
           </Button>
@@ -52,6 +78,8 @@ export default function TopNav({ onOpenSidebar }: TopNavProps) {
           </Button>
         </div>
       </div>
+
+      <CommandPalette ref={paletteRef} />
     </header>
   )
 }
