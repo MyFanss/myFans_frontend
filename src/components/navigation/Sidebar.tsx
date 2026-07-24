@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation"
 import { Compass, Home, LayoutDashboard, Settings2, User, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useTranslation } from "@/lib/i18n"
 
 const navItems = [
-  { label: "Home", href: "/home", icon: Home },
-  { label: "Discover", href: "/discover", icon: Compass },
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Profile", href: "/profile", icon: User },
-  { label: "Settings", href: "/settings", icon: Settings2 },
+  { key: "nav.home", href: "/home", icon: Home },
+  { key: "nav.discover", href: "/discover", icon: Compass },
+  { key: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { key: "nav.profile", href: "/profile", icon: User },
+  { key: "nav.settings", href: "/settings", icon: Settings2 },
 ]
 
 interface SidebarProps {
@@ -21,6 +22,7 @@ interface SidebarProps {
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
+  const { t } = useTranslation()
 
   return (
     <>
@@ -34,15 +36,15 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-3 border-b border-sidebar-border px-6 py-5">
             <div>
-              <p className="text-lg font-semibold text-sidebar-primary">MyFans</p>
-              <p className="text-sm text-sidebar-accent-foreground">Creator workspace</p>
+              <p className="text-lg font-semibold text-sidebar-primary">{t("sidebar.appName")}</p>
+              <p className="text-sm text-sidebar-accent-foreground">{t("sidebar.workspace")}</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
               className="md:hidden"
-              aria-label="Close navigation"
+              aria-label={t("nav.close")}
             >
               <X className="h-4 w-4" />
             </Button>
@@ -67,17 +69,15 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
                   onClick={onClose}
                 >
                   <Icon className="h-5 w-5" aria-hidden="true" />
-                  {item.label}
+                  {t(item.key)}
                 </Link>
               )
             })}
           </nav>
 
           <div className="border-t border-sidebar-border p-4 text-sm text-sidebar-accent-foreground">
-            <p className="font-medium">MyFans Shell</p>
-            <p className="mt-2 text-xs leading-5">
-              Use the sidebar to navigate between feature screens. Mobile users can open and close the menu with the top nav button.
-            </p>
+            <p className="font-medium">{t("sidebar.shellName")}</p>
+            <p className="mt-2 text-xs leading-5">{t("sidebar.hint")}</p>
           </div>
         </div>
       </aside>
@@ -87,7 +87,7 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
           type="button"
           className="fixed inset-0 z-20 bg-black/40 md:hidden"
           onClick={onClose}
-          aria-label="Close sidebar overlay"
+          aria-label={t("nav.closeOverlay")}
         />
       )}
     </>

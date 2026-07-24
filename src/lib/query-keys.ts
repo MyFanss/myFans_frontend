@@ -12,6 +12,7 @@ export const queryKeys = {
     details: () => ["creators", "detail"] as const,
     detail: (handle: string) =>
       [...queryKeys.creators.details(), handle] as const,
+    analytics: (range: string) => ["creators", "analytics", range] as const,
   },
   subscriptions: {
     all: ["subscriptions"] as const,
