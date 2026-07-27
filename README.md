@@ -111,6 +111,42 @@ npm run test
 npm run build
 ```
 
+## Toast notifications
+
+A global toast system (backed by [Sonner](https://sonner.emilkowal.ski/)) is mounted once in the root
+layout via `<Toaster />` from `@/components/ui/sonner` — no per-page setup needed.
+
+Feature pages (e.g. auth, settings) can trigger toasts either through the `useToast()` hook or the
+plain helper functions, whichever fits the component:
+
+```tsx
+"use client";
+
+import { useToast } from "@/hooks/use-toast";
+// or: import { showSuccess, showError, showInfo } from "@/lib/toast";
+
+export function SaveSettingsButton() {
+  const toast = useToast();
+
+  async function handleSave() {
+    try {
+      await saveSettings();
+      toast.success("Settings saved");
+    } catch {
+      toast.error("Failed to save settings");
+    }
+  }
+
+  return <button onClick={handleSave}>Save</button>;
+}
+```
+
+- Variants: `success`, `error`, `info`.
+- Toasts auto-dismiss after 4s by default (configurable via the `duration` prop on `<Toaster />`, or
+  per-toast via the `options` argument).
+- Multiple toasts stack without overlapping (Sonner handles positioning).
+- Sonner renders toasts in an `aria-live` region, so they're announced to screen readers.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
