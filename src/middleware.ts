@@ -4,11 +4,16 @@ import { isAuthenticatedFromRequest } from "@/lib/auth/session";
 
 const AUTH_ROUTES = ["/login", "/signup"];
 const PROTECTED_PREFIXES = ["/dashboard", "/profile", "/discover", "/subscriptions"];
+const ONBOARDING_PREFIX = "/onboarding";
 
 function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
   );
+}
+
+function isOnboardingPath(pathname: string): boolean {
+  return pathname === ONBOARDING_PREFIX || pathname.startsWith(`${ONBOARDING_PREFIX}/`);
 }
 
 export function middleware(request: NextRequest) {
@@ -36,5 +41,6 @@ export const config = {
     "/profile/:path*",
     "/discover/:path*",
     "/subscriptions/:path*",
+    "/onboarding/:path*",
   ],
 };
