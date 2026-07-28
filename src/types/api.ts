@@ -89,6 +89,26 @@ export interface Post {
   createdAt: string;
 }
 
+export interface FeedPost extends Post {
+  author?: {
+    id: string;
+    name: string;
+    handle: string;
+    avatarUrl?: string;
+  };
+  isLiked?: boolean;
+  likeCount?: number;
+  commentCount?: number;
+  isMuted?: boolean;
+  isBlocked?: boolean;
+}
+
+export interface FeedResponse {
+  posts: FeedPost[];
+  cursor?: string;
+  hasMore?: boolean;
+}
+
 export interface PayoutWallet {
   id: string;
   userId: string;
