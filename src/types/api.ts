@@ -153,3 +153,48 @@ export interface Like {
   commentId?: string;
   createdAt: string;
 }
+
+export interface TipIntent {
+  id: string;
+  creatorId: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  message?: string;
+  status: "pending" | "confirmed" | "completed" | "failed" | "cancelled";
+  idempotencyKey: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export interface TipConfirmation {
+  intentId: string;
+  paymentMethodId?: string;
+  nonce?: string;
+}
+
+export interface Tip {
+  id: string;
+  creatorId: string;
+  userId: string;
+  amount: number;
+  currency: string;
+  message?: string;
+  status: "completed" | "failed";
+  createdAt: string;
+}
+
+export interface FeeBreakdown {
+  platformFee: number;
+  creatorReceives: number;
+  total: number;
+  platformFeePercentage: number;
+}
+
+export interface TipConfig {
+  minAmount: number;
+  maxAmount: number;
+  platformFeePercentage: number;
+  currency: string;
+  disabled?: boolean;
+}
