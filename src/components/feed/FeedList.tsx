@@ -123,7 +123,7 @@ export function FeedList({ filter = "all", onActionClick }: FeedListProps) {
         {/* Soft-fail next page error */}
         {isFetching && isError && posts.length > 0 && (
           <div className="mx-4 p-3 rounded-md border border-red-200 bg-red-50 text-sm text-red-700 flex items-center justify-between">
-            <span>Couldn't load more posts</span>
+            <span>Could not load more posts</span>
             <button
               onClick={() => void fetchNextPage()}
               className="underline font-medium hover:no-underline"

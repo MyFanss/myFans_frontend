@@ -31,6 +31,7 @@ export function FeedFilters({ activeFilter, onFilterChange }: FeedFiltersProps) 
         role="tab"
         aria-selected={activeFilter === "media"}
       >
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <Image className="mr-1 size-4" aria-hidden />
         Media
       </Button>
