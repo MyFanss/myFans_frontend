@@ -198,3 +198,38 @@ export interface TipConfig {
   currency: string;
   disabled?: boolean;
 }
+
+export interface MediaItem {
+  id: string;
+  url: string;
+  type: "image" | "video" | "audio";
+  mimeType: string;
+  size: number;
+  duration?: number;
+  width?: number;
+  height?: number;
+  createdAt: string;
+}
+
+export interface UploadedMedia {
+  id: string;
+  url: string;
+  mimeType: string;
+  size: number;
+  width?: number;
+  height?: number;
+  duration?: number;
+}
+
+export interface UploadProgress {
+  itemId: string;
+  loaded: number;
+  total: number;
+  progress: number;
+}
+
+export interface MediaValidationError {
+  code: "INVALID_TYPE" | "FILE_TOO_LARGE" | "TOTAL_TOO_LARGE" | "INVALID_DIMENSIONS" | "SPOOFED_FILE";
+  message: string;
+  field?: string;
+}
