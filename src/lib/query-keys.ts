@@ -34,4 +34,10 @@ export const queryKeys = {
     commentsList: (postId: string, cursor?: string) =>
       [...queryKeys.interactions.comments(postId), cursor ?? "initial"] as const,
   },
+  tips: {
+    all: ["tips"] as const,
+    list: () => ["tips", "list"] as const,
+    byCreator: (creatorId: string) => ["tips", "creator", creatorId] as const,
+    intent: (intentId: string) => ["tips", "intent", intentId] as const,
+  },
 };
