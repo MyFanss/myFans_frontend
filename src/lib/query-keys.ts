@@ -40,4 +40,13 @@ export const queryKeys = {
     byCreator: (creatorId: string) => ["tips", "creator", creatorId] as const,
     intent: (intentId: string) => ["tips", "intent", intentId] as const,
   },
+  messages: {
+    all: ["messages"] as const,
+    threads: () => ["messages", "threads"] as const,
+    threadsList: (cursor?: string) => [...queryKeys.messages.threads(), cursor ?? "initial"] as const,
+    thread: (threadId: string) => ["messages", "thread", threadId] as const,
+    messages: (threadId: string) => ["messages", "messages", threadId] as const,
+    messagesList: (threadId: string, cursor?: string) =>
+      [...queryKeys.messages.messages(threadId), cursor ?? "initial"] as const,
+  },
 };
