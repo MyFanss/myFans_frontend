@@ -116,3 +116,40 @@ export interface PayoutWallet {
   provider: string;
   connectedAt: string;
 }
+
+export interface Comment {
+  id: string;
+  postId: string;
+  author: {
+    id: string;
+    name: string;
+    handle: string;
+    avatarUrl?: string;
+  };
+  body: string;
+  createdAt: string;
+  parentId?: string;
+  likeCount: number;
+  likedByMe: boolean;
+  deleted: boolean;
+}
+
+export interface CommentCreateInput {
+  postId: string;
+  body: string;
+  parentId?: string;
+}
+
+export interface CommentsResponse {
+  comments: Comment[];
+  cursor?: string;
+  hasMore?: boolean;
+}
+
+export interface Like {
+  id: string;
+  userId: string;
+  postId: string;
+  commentId?: string;
+  createdAt: string;
+}
