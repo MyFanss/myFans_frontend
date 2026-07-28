@@ -24,4 +24,8 @@ export const queryKeys = {
     all: ["payouts"] as const,
     wallet: () => ["payouts", "wallet"] as const,
   },
+  feed: {
+    all: ["feed"] as const,
+    infinite: (filter?: string) => ["feed", "infinite", filter ?? "all"] as const,
+  },
 };
