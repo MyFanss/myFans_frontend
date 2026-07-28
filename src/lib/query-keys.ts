@@ -28,4 +28,10 @@ export const queryKeys = {
     all: ["feed"] as const,
     infinite: (filter?: string) => ["feed", "infinite", filter ?? "all"] as const,
   },
+  interactions: {
+    all: ["interactions"] as const,
+    comments: (postId: string) => ["interactions", "comments", postId] as const,
+    commentsList: (postId: string, cursor?: string) =>
+      [...queryKeys.interactions.comments(postId), cursor ?? "initial"] as const,
+  },
 };
