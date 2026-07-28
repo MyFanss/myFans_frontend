@@ -35,7 +35,7 @@ function getMockSearchResults(query: string): SearchResult {
       avatarUrl: undefined,
       subscriberCount: 18420,
       isSubscribed: false,
-      category: "Cosplay",
+      category: "Fashion",
     },
     {
       id: "creator_marco",

@@ -89,23 +89,6 @@ export interface Post {
   createdAt: string;
 }
 
-export interface Creator extends User {
-  name: string;
-  handle: string;
-  bio?: string;
-  avatarUrl?: string;
-  subscriberCount: number;
-  isSubscribed: boolean;
-}
-
-export interface Subscription {
-  id: string;
-  creatorId: string;
-  fanId: string;
-  createdAt: string;
-  creator?: Creator;
-}
-
 export interface PayoutWallet {
   id: string;
   userId: string;
