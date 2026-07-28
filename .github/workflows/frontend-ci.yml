@@ -22,11 +22,11 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Clear npm cache and reinstall
+      - name: Install dependencies
         run: |
           npm cache clean --force
           rm -rf node_modules package-lock.json pnpm-lock.yaml
-          npm install --legacy-peer-deps --verbose
+          npm install --force
 
       - name: Lint
         run: npm run lint
