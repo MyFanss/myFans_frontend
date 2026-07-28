@@ -21,15 +21,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: npm
 
-      - name: Clear npm cache and node_modules
+      - name: Clear npm cache and reinstall
         run: |
           npm cache clean --force
-          rm -rf node_modules package-lock.json
-
-      - name: Install dependencies
-        run: npm install
+          rm -rf node_modules package-lock.json pnpm-lock.yaml
+          npm install --legacy-peer-deps --verbose
 
       - name: Lint
         run: npm run lint
