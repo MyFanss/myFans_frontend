@@ -49,4 +49,11 @@ export const queryKeys = {
     messagesList: (threadId: string, cursor?: string) =>
       [...queryKeys.messages.messages(threadId), cursor ?? "initial"] as const,
   },
+  notifications: {
+    all: ["notifications"] as const,
+    list: () => ["notifications", "list"] as const,
+    listPaged: (type?: string, unreadOnly?: boolean, cursor?: string) =>
+      [...queryKeys.notifications.list(), { type, unreadOnly }, cursor ?? "initial"] as const,
+    unreadCount: () => ["notifications", "unreadCount"] as const,
+  },
 };
