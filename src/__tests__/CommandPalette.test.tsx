@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render } from "@testing-library/react";
 import CommandPalette from "@/components/navigation/CommandPalette";
 import { useGlobalSearch } from "@/hooks/useGlobalSearch";
 import type { UseGlobalSearchReturn } from "@/hooks/useGlobalSearch";

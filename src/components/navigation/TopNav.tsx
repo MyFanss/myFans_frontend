@@ -1,11 +1,14 @@
 "use client"
 
-import { useRef } from "react"
+import { useCallback, useRef } from "react"
 import { Bell, Menu, Search, UserCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import ThemeToggle from "@/components/theme/ThemeToggle"
 import LocaleSwitcher from "@/components/i18n/LocaleSwitcher"
 import { useTranslation } from "@/lib/i18n"
+import CommandPalette, {
+  type CommandPaletteHandle,
+} from "@/components/navigation/CommandPalette"
 
 interface TopNavProps {
   onOpenSidebar: () => void
@@ -13,6 +16,11 @@ interface TopNavProps {
 
 export default function TopNav({ onOpenSidebar }: TopNavProps) {
   const { t } = useTranslation()
+  const paletteRef = useRef<CommandPaletteHandle>(null)
+
+  const handleSearchClick = useCallback(() => {
+    paletteRef.current?.open()
+  }, [])
 
   return (
     <header className="sticky top-0 z-10 border-b border-sidebar-border bg-background/95 backdrop-blur md:pl-72">

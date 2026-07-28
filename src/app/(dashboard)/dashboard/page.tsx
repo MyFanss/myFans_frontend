@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react";
 import Link from "next/link";
-import { UserCheck, AlertCircle } from "lucide-react";
+import { UserCheck } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import StatCard, { StatCardSkeleton } from "@/components/dashboard/StatCard";
 import RangePicker from "@/components/dashboard/RangePicker";

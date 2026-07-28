@@ -117,6 +117,17 @@ const CommandPalette = forwardRef<CommandPaletteHandle>((_props, ref) => {
   const groupedResults = buildGroups(results, query, hasSearched);
   const flatItems = groupedResults.flatMap((g) => g.items);
   const totalItems = flatItems.length;
+
+  const handleSelectItem = useCallback(
+    (item: PaletteItem) => {
+      addRecent(query.trim() || item.label);
+      setIsOpen(false);
+      setQuery("");
+      router.push(item.href);
+    },
+    [addRecent, query, router, setQuery]
+  );
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === "ArrowDown") {
@@ -135,15 +146,8 @@ const CommandPalette = forwardRef<CommandPaletteHandle>((_props, ref) => {
         setQuery("");
       }
     },
-    [activeIndex, totalItems, flatItems, query, addRecent, router]
+    [activeIndex, totalItems, flatItems, handleSelectItem, setQuery]
   );
-
-  function handleSelectItem(item: PaletteItem) {
-    addRecent(query.trim() || item.label);
-    setIsOpen(false);
-    setQuery("");
-    router.push(item.href);
-  }
 
   function handleRecentClick(term: string) { setQuery(term); }
   function handleOverlayClick() { setIsOpen(false); setQuery(""); }
