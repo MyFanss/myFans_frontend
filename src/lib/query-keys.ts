@@ -20,6 +20,11 @@ export const queryKeys = {
     list: (userId?: string) =>
       [...queryKeys.subscriptions.lists(), userId] as const,
   },
+  posts: {
+    all: ["posts"] as const,
+    lists: () => ["posts", "list"] as const,
+    list: () => [...queryKeys.posts.lists()] as const,
+  },
   payouts: {
     all: ["payouts"] as const,
     wallet: () => ["payouts", "wallet"] as const,
