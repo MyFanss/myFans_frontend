@@ -107,8 +107,8 @@ export function NotificationsPageContent({
             <p className="text-lg font-semibold mb-2">No notifications</p>
             <p className="text-sm text-muted-foreground">
               {showUnreadOnly
-                ? 'You're all caught up!'
-                : 'Check back later for updates'}
+                ? "You're all caught up!"
+                : "Check back later for updates"}
             </p>
           </div>
         ) : (

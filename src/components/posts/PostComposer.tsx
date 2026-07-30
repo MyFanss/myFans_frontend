@@ -13,7 +13,7 @@ import {
   POST_TITLE_MAX_LENGTH,
   type PostVisibility,
 } from "@/lib/validations/post";
-import { createPost } from "@/lib/api/posts";
+import { useCreatePost } from "@/hooks/mutations/useCreatePost";
 
 const VISIBILITY_OPTIONS: { value: PostVisibility; label: string }[] = [
   { value: "public", label: "Public" },
@@ -22,15 +22,15 @@ const VISIBILITY_OPTIONS: { value: PostVisibility; label: string }[] = [
 
 export function PostComposer() {
   const router = useRouter();
+  const createPostMutation = useCreatePost();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [visibility, setVisibility] = useState<PostVisibility>("public");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitError(null);
 
@@ -54,16 +54,15 @@ export function PostComposer() {
     }
 
     setErrors({});
-    setIsSubmitting(true);
 
-    try {
-      await createPost(result.data);
-      router.push("/dashboard/posts?published=1");
-    } catch {
-      setSubmitError("Failed to publish post. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    createPostMutation.mutate(result.data, {
+      onSuccess: () => {
+        router.push("/dashboard/posts?published=1");
+      },
+      onError: () => {
+        setSubmitError("Failed to publish post. Please try again.");
+      },
+    });
   }
 
   return (
@@ -149,8 +148,8 @@ export function PostComposer() {
           <p className="text-sm text-red-600">{submitError}</p>
         ) : null}
 
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Publishing..." : "Publish"}
+        <Button type="submit" disabled={createPostMutation.isPending}>
+          {createPostMutation.isPending ? "Publishing..." : "Publish"}
         </Button>
       </form>
     </main>
