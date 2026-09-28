@@ -2,10 +2,12 @@ import { Suspense } from "react";
 import { CreatorGuard } from "@/components/auth/creator-guard";
 import { PostList } from "@/components/posts/PostList";
 import { PostListSkeletonGroup } from "@/components/posts/PostListSkeleton";
+import { OfflineBanner } from "@/components/offline/OfflineBanner";
 
 export default function PostsPage() {
   return (
     <CreatorGuard>
+      <OfflineBanner />
       <Suspense
         fallback={
           <main className="min-h-screen p-8">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import DashboardShell from "@/components/navigation/DashboardShell"
+import OfflineBanner from "@/components/feedback/OfflineBanner"
 
 export const metadata: Metadata = {
   title: "MyFans Dashboard",
@@ -11,5 +12,10 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <DashboardShell>{children}</DashboardShell>
+  return (
+    <DashboardShell>
+      <OfflineBanner />
+      {children}
+    </DashboardShell>
+  )
 }
